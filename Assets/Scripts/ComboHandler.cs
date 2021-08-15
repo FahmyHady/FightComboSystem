@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using System.Linq;
+using UnityEditor;
 
 public enum InputAction { L, H };
 
@@ -36,12 +37,16 @@ public class ComboHandler : MonoBehaviour
     List<ComboSequence> activePossiblitlities = new List<ComboSequence>();
     List<ComboRec> tempSequenceWithTimeStamp;
     List<InputAction> movesActive = new List<InputAction>();
+    ComboStep comboStepActive;
     List<InputRec> inputHistory;
     bool sequenceStarted;
     int sequenceIncrementor;
     Animator animator;
     int lastSequenceNumber = -1;
     float elapsedSequenceTime;
+    bool canTakeInput;
+    string lastAttackSequence = "";
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -50,7 +55,11 @@ public class ComboHandler : MonoBehaviour
     }
     private void Update()
     {
-        TakeInput();
+        canTakeInput = sequenceStarted ? false : true;
+        if (!canTakeInput)
+            CheckIfCanTakeInput();
+        if (canTakeInput)
+            TakeInput();
         CheckInputValidity();
         GetInputBufferDeltaTimes();
         RegisterValidAttacks();
@@ -58,6 +67,15 @@ public class ComboHandler : MonoBehaviour
         //Clear After Sequence Ends
         //AnalyzeInput();
         //ExecuteInput();
+    }
+    void CheckIfCanTakeInput()
+    {
+        var input = inputHistory[sequenceIncrementor - 1];
+        var step = comboStepActive;
+        if (input.action == step.action && input.deltaTime >= step.minChainTime && input.deltaTime <= step.maxChainTime)
+            canTakeInput = true;
+        else
+            canTakeInput = false;
     }
     void TakeInput()
     {
@@ -147,6 +165,8 @@ public class ComboHandler : MonoBehaviour
                 sequenceStarted = true;
                 movesActive.Add(inputHistory[0].action);
                 ProcessInputToGetPossibleSequences();
+                comboStepActive = activePossiblitlities[0].sequenceSteps[0];
+
             }
             else
             {
@@ -160,6 +180,7 @@ public class ComboHandler : MonoBehaviour
                         {
                             sequenceIncrementor++;
                             movesActive.Add(step.action);
+                            comboStepActive = step;
                             break;
                         }
                     }
@@ -170,6 +191,7 @@ public class ComboHandler : MonoBehaviour
         }
 
     }
+
     void ExecuteQueuedAttacks()
     {
         if (movesActive.Count > 0)
@@ -182,7 +204,7 @@ public class ComboHandler : MonoBehaviour
             }
             if (attackSequence != "" && attackSequence != lastAttackSequence)
             {
-                Debug.Log(attackSequence);
+                Log.Print(attackSequence);
                 lastAttackSequence = attackSequence;
                 animator.SetTrigger(attackSequence);
             }
@@ -195,6 +217,7 @@ public class ComboHandler : MonoBehaviour
         {
             lastAttackSequence = "";
             animator.SetBool("Attacking", false);
+            Log.ClearAfterDelay(1);
         }
     }
     public void ResetSequence()
@@ -204,82 +227,21 @@ public class ComboHandler : MonoBehaviour
         lastSequenceNumber = -1;
         lastAttackSequence = "";
         movesActive.Clear();
+        comboStepActive = null;
         inputHistory.Clear();
         activePossiblitlities.Clear();
-
+        ResetAllTriggers();
     }
-    void AnalyzeInput()
+
+
+    private void ResetAllTriggers()
     {
-
-        bool addedAnAttack = false;
-        for (int i = 0; i < availableSqeuences.Length; i++)
+        foreach (var param in animator.parameters)
         {
-            if (addedAnAttack)
-                break;
-            for (int j = 0; j < inputHistory.Count; j++)
+            if (param.type == AnimatorControllerParameterType.Trigger)
             {
-                InputAction action = inputHistory[j].action;
-                float deltaTime = 0;
-                if (j != 0)
-                    deltaTime = inputHistory[j].timeStamp - inputHistory[j - 1].timeStamp;
-                else
-                    deltaTime = Time.time - inputHistory[j].timeStamp;
-                Debug.Log(deltaTime);
-                ComboStep currentSequnceStep = availableSqeuences[i].sequenceSteps[j];
-                if (action == currentSequnceStep.action && deltaTime <= currentSequnceStep.maxChainTime && deltaTime >= currentSequnceStep.minChainTime)
-                {
-                    var step = new ComboRec(currentSequnceStep, inputHistory[j].timeStamp);
-                    if (!tempSequenceWithTimeStamp.Contains(step))
-                    {
-                        tempSequenceWithTimeStamp.Add(step);
-                        addedAnAttack = true;
-                        break;
-                    }
-                }
-                else//Sequence Doesn't Match
-                {
-                    break;
-                }
+                animator.ResetTrigger(param.name);
             }
-        }
-
-        while (tempSequenceWithTimeStamp.Count > MaxActions)
-        {
-            tempSequenceWithTimeStamp.RemoveAt(0);
-        }
-
-        if (tempSequenceWithTimeStamp.Count > 0)
-        {
-            var lastStepInSequence = tempSequenceWithTimeStamp[tempSequenceWithTimeStamp.Count - 1];
-
-            if (Time.time - lastStepInSequence.timeStamp > lastStepInSequence.comboStep.maxChainTime)
-            {
-                tempSequenceWithTimeStamp.Clear();
-            }
-        }
-    }
-    string lastAttackSequence = "";
-    void ExecuteInput()
-    {
-        if (tempSequenceWithTimeStamp.Count > 0)
-        {
-            animator.SetBool("Attacking", true);
-            string attackSequence = "";
-            foreach (var item in tempSequenceWithTimeStamp)
-            {
-                attackSequence += item.comboStep.action.ToString();
-            }
-            if (attackSequence != "" && attackSequence != lastAttackSequence)
-            {
-                Debug.Log(attackSequence);
-                lastAttackSequence = attackSequence;
-                animator.SetTrigger(attackSequence);
-            }
-        }
-        else
-        {
-            lastAttackSequence = "";
-            animator.SetBool("Attacking", false);
         }
     }
 }

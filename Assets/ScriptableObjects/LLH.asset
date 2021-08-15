@@ -15,10 +15,10 @@ MonoBehaviour:
   sequenceSteps:
   - action: 0
     minChainTime: 0
-    maxChainTime: 1
+    maxChainTime: 100
   - action: 0
     minChainTime: 0
-    maxChainTime: 2
-  - action: 1
-    minChainTime: 0.5
-    maxChainTime: 1
+    maxChainTime: 100
+  - action: 0
+    minChainTime: 0
+    maxChainTime: 0
