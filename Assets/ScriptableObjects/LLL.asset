@@ -13,12 +13,36 @@ MonoBehaviour:
   m_Name: LLL
   m_EditorClassIdentifier: 
   sequenceSteps:
-  - action: 0
-    minChainTime: 0
-    maxChainTime: 100
-  - action: 0
-    minChainTime: 0
-    maxChainTime: 100
-  - action: 0
-    minChainTime: 0
-    maxChainTime: 0
+  - limb: 0
+    attackPower: 3
+    attackRange: 0.5
+    action: 0
+    minChainTime: 0.21666668
+    maxChainTime: 0.86666673
+    animationClip: {fileID: -203655887218126122, guid: 5c7ca2b9a80d54449bcdcdc71cd410b4,
+      type: 3}
+    autoConfigureTime: 1
+    percentageOfMinChainTime: 0.1
+    percentageOfMaxChainTime: 0.4
+  - limb: 1
+    attackPower: 2
+    attackRange: 0.5
+    action: 0
+    minChainTime: 0.120000005
+    maxChainTime: 0.90000004
+    animationClip: {fileID: -203655887218126122, guid: 7b0b457bd758daf44abcb69669a24537,
+      type: 3}
+    autoConfigureTime: 1
+    percentageOfMinChainTime: 0.1
+    percentageOfMaxChainTime: 0.75
+  - limb: 0
+    attackPower: 5
+    attackRange: 0.5
+    action: 0
+    minChainTime: 0.21333335
+    maxChainTime: 0.8533334
+    animationClip: {fileID: -203655887218126122, guid: ffecbab349ed04a4d9de6cc317b07b56,
+      type: 3}
+    autoConfigureTime: 1
+    percentageOfMinChainTime: 0.1
+    percentageOfMaxChainTime: 0.4

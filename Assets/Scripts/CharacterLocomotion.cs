@@ -9,6 +9,7 @@ public class CharacterLocomotion : MonoBehaviour
     Rigidbody rigidbody;
     float m_TurnAmount;
     float m_ForwardAmount;
+    [SerializeField] [Range(1,5)] float speedFactor=1;
     [HideInInspector] public Vector3 rotationVector;
     [HideInInspector] public Vector3 upperBodyRotationEulers;
     void Start()
@@ -20,13 +21,13 @@ public class CharacterLocomotion : MonoBehaviour
     {
         // we implement this function to override the default root motion.
         // this allows us to modify the positional speed before it's applied.
-        Vector3 v = anim.deltaPosition / Time.deltaTime;
+        Vector3 v = anim.deltaPosition*speedFactor / Time.deltaTime;
         Vector3 newRot = new Vector3(
             transform.eulerAngles.x + rotationVector.x + anim.deltaRotation.eulerAngles.x,
              transform.eulerAngles.y + rotationVector.y + anim.deltaRotation.eulerAngles.y,
               transform.eulerAngles.z + rotationVector.z + anim.deltaRotation.eulerAngles.z
             );
-        rigidbody.MoveRotation(Quaternion.Euler(newRot));
+     //   rigidbody.MoveRotation(Quaternion.Euler(newRot));
         v.y = rigidbody.velocity.y;
         rigidbody.velocity = v;
     }
@@ -56,20 +57,15 @@ public class CharacterLocomotion : MonoBehaviour
         anim.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
         anim.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
     }
-    public void MoveAiming(Vector3 move)
-    {
-        if (move.magnitude > 1f) move.Normalize();
-        anim.SetFloat("Speed X", move.x, 0.1f, Time.deltaTime);
-        anim.SetFloat("Speed Z", move.z, 0.1f, Time.deltaTime);
-    }
+
     void ApplyExtraTurnRotation()
     {
         // help the character turn faster (this is in addition to root rotation in the animation)
         float turnSpeed = Mathf.Lerp(360, 180, m_ForwardAmount);
         transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
     }
-    public void UpdateAnimatorState(int comboCounter)
+    public void UpdateAnimatorAimingState(bool aiming)
     {
-        anim.SetInteger("Combo Counter", comboCounter);
+        anim.SetBool("Aiming", aiming);
     }
 }

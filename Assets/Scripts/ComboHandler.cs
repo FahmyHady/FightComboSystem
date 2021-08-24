@@ -37,7 +37,7 @@ public class ComboHandler : MonoBehaviour
     List<ComboSequence> activePossiblitlities = new List<ComboSequence>();
     List<ComboRec> tempSequenceWithTimeStamp;
     List<InputAction> movesActive = new List<InputAction>();
-    ComboStep comboStepActive;
+    internal ComboStep comboStepActive;
     List<InputRec> inputHistory;
     bool sequenceStarted;
     int sequenceIncrementor;
@@ -175,12 +175,13 @@ public class ComboHandler : MonoBehaviour
                     if (inputHistory.Count > sequenceIncrementor)
                     {
                         var input = inputHistory[sequenceIncrementor];
-                        var step = activePossiblitlities[i].sequenceSteps[sequenceIncrementor];
-                        if (input.action == step.action && input.deltaTime >= step.minChainTime && input.deltaTime <= step.maxChainTime)
+                        var currentStep = activePossiblitlities[i].sequenceSteps[sequenceIncrementor - 1];
+                        var nextStep = activePossiblitlities[i].sequenceSteps[sequenceIncrementor];
+                        if (input.action == nextStep.action && input.deltaTime >= currentStep.minChainTime && input.deltaTime <= currentStep.maxChainTime)
                         {
                             sequenceIncrementor++;
-                            movesActive.Add(step.action);
-                            comboStepActive = step;
+                            movesActive.Add(nextStep.action);
+                            comboStepActive = nextStep;
                             break;
                         }
                     }
@@ -197,6 +198,7 @@ public class ComboHandler : MonoBehaviour
         if (movesActive.Count > 0)
         {
             animator.SetBool("Attacking", true);
+            EventManager.TriggerEvent("Attacking", true);
             string attackSequence = "";
             foreach (var item in movesActive)
             {
@@ -207,8 +209,10 @@ public class ComboHandler : MonoBehaviour
                 Log.Print(attackSequence);
                 lastAttackSequence = attackSequence;
                 animator.SetTrigger(attackSequence);
+                EventManager.TriggerEvent("Attack Will Land In", comboStepActive.animationClip.events[0].time);
+            Debug.Log(comboStepActive.animationClip.events[0].time);
             }
-            if (movesActive.Count == 3)
+            if (movesActive.Count == 4)
             {
                 ResetSequence();
             }
@@ -217,6 +221,7 @@ public class ComboHandler : MonoBehaviour
         {
             lastAttackSequence = "";
             animator.SetBool("Attacking", false);
+            EventManager.TriggerEvent("Attacking", false);
             Log.ClearAfterDelay(1);
         }
     }

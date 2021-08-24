@@ -58,7 +58,23 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.32360744
+        functionName: PlayPunchLandedEffects
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 321c49496ff9dbc45b0090f331718f1a,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.43766576
+        functionName: PlayPunchEndedEffects
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 321c49496ff9dbc45b0090f331718f1a,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class PunchRayCaster : MonoBehaviour
 {
-    public RaycastHit PunchCast(float range)
+    float rangeTempForGizmos;
+    [SerializeField] LayerMask targetMask;
+    public Collider[] PunchCast(float range)
     {
-        Debug.DrawRay(transform.position, transform.position + transform.up * range, Color.red, 5);
-        Physics.Raycast(transform.position, transform.up, out RaycastHit hit, range);
-        return hit;
+        rangeTempForGizmos = range;
+        return Physics.OverlapCapsule(transform.position, transform.position + transform.up * range, 0.1f, targetMask);
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, 0.1f);
+        Gizmos.DrawWireSphere(transform.position + transform.up * rangeTempForGizmos, 0.1f);
     }
 }

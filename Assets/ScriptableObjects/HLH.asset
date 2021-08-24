@@ -13,12 +13,36 @@ MonoBehaviour:
   m_Name: HLH
   m_EditorClassIdentifier: 
   sequenceSteps:
-  - action: 1
-    minChainTime: 0
-    maxChainTime: 1
-  - action: 0
-    minChainTime: 0.5
-    maxChainTime: 1
-  - action: 1
-    minChainTime: 0.5
-    maxChainTime: 1
+  - limb: 0
+    attackPower: 4
+    attackRange: 0.5
+    action: 1
+    minChainTime: 0.24000001
+    maxChainTime: 0.96000004
+    animationClip: {fileID: -203655887218126122, guid: c4e1d491f462c1c44a3257640be63a8d,
+      type: 3}
+    autoConfigureTime: 1
+    percentageOfMinChainTime: 0.1
+    percentageOfMaxChainTime: 0.4
+  - limb: 2
+    attackPower: 2
+    attackRange: 0.5
+    action: 0
+    minChainTime: 0.14666668
+    maxChainTime: 0.5866667
+    animationClip: {fileID: -203655887218126122, guid: a61afff6f5c997c44ac836ea612e7af3,
+      type: 3}
+    autoConfigureTime: 1
+    percentageOfMinChainTime: 0.1
+    percentageOfMaxChainTime: 0.4
+  - limb: 2
+    attackPower: 15
+    attackRange: 0.5
+    action: 1
+    minChainTime: 0.14333335
+    maxChainTime: 0.5733334
+    animationClip: {fileID: -203655887218126122, guid: bfe4df5e5ddc9624bafca9bc959c7e5e,
+      type: 3}
+    autoConfigureTime: 1
+    percentageOfMinChainTime: 0.1
+    percentageOfMaxChainTime: 0.4

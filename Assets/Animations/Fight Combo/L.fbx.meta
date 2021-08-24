@@ -59,15 +59,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0
-        functionName: PlayStartPunchEffects
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 321c49496ff9dbc45b0090f331718f1a,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.44526005
+      - time: 0.49034202
         functionName: PlayPunchLandedEffects
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 321c49496ff9dbc45b0090f331718f1a,
@@ -75,7 +67,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.47759113
+      - time: 0.510378
         functionName: PlayPunchEndedEffects
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 321c49496ff9dbc45b0090f331718f1a,
